@@ -1,0 +1,54 @@
+---
+
+node_exporter_create_folders:
+  - path: "{{ node_exporter_config_path }}"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    remote_src: true
+    state: directory
+  - path: "{{ node_exporter_config_path }}/ssl"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    remote_src: true
+    state: directory
+
+node_exporter_copy_files:
+  - src: "{{ work_dir }}/{{ node_exporter_name }}-{{ node_exporter_version }}.{{ os_platform }}/{{ node_exporter_name }}"
+    dest: "{{ node_exporter_install_path }}"
+    owner: "node_exporter"
+    group: "node_exporter"
+    mode: "0755"
+    remote_src: true
+  - src: "node-exporter.service"
+    dest: "/etc/systemd/system/node-exporter.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    remote_src: false
+  - src: "node_exporter"
+    dest: "/etc/default/node_exporter"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    remote_src: false
+  - src: "node_exporter.crt"
+    dest: "{{ node_exporter_config_path }}/ssl/node_exporter.crt"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    remote_src: false
+  - src: "node_exporter.key"
+    dest: "{{ node_exporter_config_path }}/ssl/node_exporter.key"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    remote_src: false
+
+node_exporter_modify_files:
+  - src: node_exporter_config.j2
+    dest: "{{ node_exporter_config_path }}/config.yml"
+    owner: root
+    group: root
+    mode: "0644"

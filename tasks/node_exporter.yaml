@@ -1,0 +1,14 @@
+---
+
+- name: NODE EXPORTER | Create User Node Exporter
+  ansible.builtin.user:
+    name: node_exporter
+    system: true
+    create_home: false
+    comment: "Exporter system user node_exporter"
+
+- name: NODE EXPORTER | Download Node Exporter
+  ansible.builtin.unarchive:
+    src: "{{ node_exporter_URL }}"
+    dest: "{{ work_dir }}"
+    remote_src: true

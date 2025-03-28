@@ -1,0 +1,8 @@
+---
+
+  - name: Restart service node exporter
+    ansible.builtin.service:
+      state: restarted
+      enabled: true
+      daemon_reload: true
+      name: node-exporter

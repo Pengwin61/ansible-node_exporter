@@ -1,0 +1,36 @@
+---
+
+- name: NODE EXPORTER | Create directory
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  with_items: "{{ node_exporter_create_folders }}"
+
+- name: NODE EXPORTER | Copy file
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    remote_src: "{{ item.remote_src }}"
+  with_items: "{{ node_exporter_copy_files }}"
+  notify: Restart service node exporter
+
+- name: NODE EXPORTER | Modify node_exporter_config 
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  with_items: "{{ node_exporter_modify_files }}"
+
+- name: NODE EXPORTER | Enable service node-exporter
+  ansible.builtin.systemd:
+    name: node-exporter
+    enabled: true
+    state: started
